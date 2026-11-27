@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { fail } from "@/lib/api";
 import { env } from "@/lib/env";
 import { MAX_UPLOAD_BYTES, sniffImageType } from "@/lib/files";
@@ -9,6 +10,10 @@ import { commentSchema, identitySchema } from "@/lib/validation";
 
 export async function POST(req: Request) {
   if (!rateLimit(`exp:${clientIp(req)}`, 10, 60_000)) return fail("RATE_LIMITED", 429);
+
+  // Reject oversized bodies before formData() buffers them in memory (10 MB file + form overhead).
+  const declared = Number(req.headers.get("content-length") ?? 0);
+  if (declared > MAX_UPLOAD_BYTES + 1024 * 1024) return fail("FILE_TOO_LARGE", 413);
 
   let form: FormData;
   try {
@@ -22,7 +27,10 @@ export async function POST(req: Request) {
   const comment = commentSchema.safeParse(str("comment"));
   if (!identity.success || !comment.success) {
     return fail("VALIDATION", 400, {
-      issues: { ...(identity.error?.flatten().fieldErrors ?? {}), ...(comment.success ? {} : { comment: comment.error.issues.map((i) => i.message) }) },
+      issues: {
+        ...(identity.error ? z.flattenError(identity.error).fieldErrors : {}),
+        ...(comment.error ? { comment: comment.error.issues.map((i) => i.message) } : {}),
+      },
     });
   }
 
@@ -52,7 +60,8 @@ export async function POST(req: Request) {
 
   const result = await callN8n(env.n8nIntakeUrl, out);
   if (!result.ok) {
-    if (stored) await deleteUpload(stored.name);
+    // On a timeout n8n may still finish and save the expense, so keep the image it will point to.
+    if (stored && result.code !== "UPSTREAM_TIMEOUT") await deleteUpload(stored.name);
     return fail(result.code, result.status, result.body?.details ? { details: result.body.details } : undefined);
   }
   return Response.json(result.body, { status: 201 });

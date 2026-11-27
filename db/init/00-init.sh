@@ -19,6 +19,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname postgres \
   CREATE DATABASE n8n OWNER n8n;
   REVOKE ALL ON DATABASE expenses FROM PUBLIC;
   GRANT CONNECT ON DATABASE expenses TO app_rw, cfo_readonly;
+  -- nobody but the owner may even connect to the other databases
+  REVOKE CONNECT ON DATABASE n8n FROM PUBLIC;
+  REVOKE CONNECT ON DATABASE postgres FROM PUBLIC;
 EOSQL
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname expenses <<-'EOSQL'

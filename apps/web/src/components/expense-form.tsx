@@ -62,7 +62,7 @@ export function ExpenseForm({
     setError(null);
     setResult(null);
     if (!f) return;
-    if (!(f.type in ALLOWED_TYPES) && !/\.(jpe?g|png|webp|gif)$/i.test(f.name)) {
+    if (!Object.hasOwn(ALLOWED_TYPES, f.type) && !/\.(jpe?g|png|webp|gif)$/i.test(f.name)) {
       setError(messageFor("INVALID_FILE_TYPE"));
       return;
     }

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { fail, readJson } from "@/lib/api";
 import { db } from "@/lib/db";
 import { summarize, type ExpenseRow } from "@/lib/history";
@@ -8,7 +9,7 @@ import { identitySchema } from "@/lib/validation";
 export async function POST(req: Request) {
   if (!rateLimit(`hist:${clientIp(req)}`, 60, 60_000)) return fail("RATE_LIMITED", 429);
   const parsed = identitySchema.safeParse(await readJson(req));
-  if (!parsed.success) return fail("VALIDATION", 400, { issues: parsed.error.flatten().fieldErrors });
+  if (!parsed.success) return fail("VALIDATION", 400, { issues: z.flattenError(parsed.error).fieldErrors });
   const user = await findUser(parsed.data);
   if (!user) return fail("EMPLOYEE_NOT_FOUND", 404);
 

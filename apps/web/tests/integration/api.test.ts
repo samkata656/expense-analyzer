@@ -134,6 +134,25 @@ describe("POST /api/expenses", () => {
     expect((await readdir(uploadDir)).length).toBe(before);
   });
 
+  it("rejects oversized bodies before parsing them", async () => {
+    const req = new Request("http://localhost/api/expenses", {
+      method: "POST",
+      headers: { "content-length": String(50 * 1024 * 1024), "content-type": "multipart/form-data; boundary=x", "x-real-ip": "10.9.9.9" },
+      body: "--x--",
+    });
+    const res = await r.expenses.POST(req);
+    expect(res.status).toBe(413);
+    expect((await res.json()).code).toBe("FILE_TOO_LARGE");
+  });
+
+  it("keeps the image when n8n times out (it may still save the expense)", async () => {
+    const before = (await readdir(uploadDir)).length;
+    stub.reply({ status: 201, body: { ok: true }, delayMs: 3000 });
+    const res = await r.expenses.POST(form({ ...ivan, comment: "" }, { bytes: PNG, name: "slow.png", type: "image/png" }));
+    expect(res.status).toBe(504);
+    expect((await readdir(uploadDir)).length).toBe(before + 1);
+  });
+
   it("maps n8n timeouts and garbage answers to friendly codes and logs them", async () => {
     stub.reply({ status: 200, body: { ok: true }, delayMs: 3000 });
     const t = await r.expenses.POST(form({ ...ivan, comment: "такси 10 лв" }));
