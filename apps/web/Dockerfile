@@ -8,6 +8,9 @@ RUN npm ci --no-audit --no-fund
 FROM node:26-alpine AS build
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
+# Shown in the footer: "v1.2.0" for releases, "sha-abc1234" for main builds, "dev" otherwise.
+ARG APP_VERSION=dev
+ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
 COPY --from=deps /app/node_modules ./node_modules
 COPY apps/web/ ./
 RUN npm run build

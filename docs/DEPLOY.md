@@ -104,7 +104,7 @@ CFO_EMPLOYEE_CODE=...
 N8N_HOST=n8n.samkobuilds.com
 PUBLIC_BASE_URL=https://expenses.samkobuilds.com
 GHCR_OWNER=samkata656
-IMAGE_TAG=sha-xxxxxxx   # pinned image: the newest sha-… tag from the Publish images run (or "latest")
+IMAGE_TAG=1.0.0         # a release version (see "Updating"), or "latest" for the newest main build
 GENERIC_TIMEZONE=Europe/Sofia
 # Optional: the OpenAI key can go here instead of into the n8n UI (step 8)
 OPENAI_API_KEY=
@@ -178,10 +178,19 @@ On your phone, at `https://expenses.samkobuilds.com`:
 - If `/var/run/reboot-required` exists, run `sudo reboot`. All containers come back by themselves.
 - Take the firewall screenshot for the submission now.
 
-## Updating
-1. Merge a PR into `main`. CI runs, then **Publish images** pushes new `latest` and `sha-xxxxxxx` tags.
-2. Portainer → Stacks → your stack → set `IMAGE_TAG=sha-<new>` in the variables → **Update the stack** (with ✅ *Re-pull image* and, for compose changes, *Pull latest from git*). Migrations and the workflow import run automatically on start.
-3. To roll back, set `IMAGE_TAG` back to the previous `sha-…` and update again.
+## Updating (releases)
+Every merge to `main` publishes `latest` and `sha-xxxxxxx` images. To deploy, cut a **release** with a version number:
+
+1. Wait for CI on `main` to be green, then create the release. Either:
+   - on GitHub: **Releases → Draft a new release → Choose a tag → type `v1.1.0` → Generate release notes → Publish release**, or
+   - from a terminal: `gh release create v1.1.0 --generate-notes`
+2. **Publish images** builds `ghcr.io/samkata656/expense-analyzer-{web,db,n8n}:1.1.0` (and `:1.1`). It refuses if CI hasn't passed on that commit. Wait for it to turn green in the Actions tab.
+3. Portainer → Stacks → your stack → **Edit stack settings** → set `IMAGE_TAG=1.1.0` → update with ✅ *Re-pull image*. If the release changed `docker-compose.yml`, also click **Pull and redeploy** so Portainer fetches the new file from git.
+4. Check the footer of `https://expenses.samkobuilds.com`: it shows the running version (`v1.1.0`). Migrations and the workflow import run automatically on start.
+
+**Rollback:** set `IMAGE_TAG` back to the previous version (for example `1.0.0`) and update the stack.
+
+Versioning: `MAJOR.MINOR.PATCH`. Bump PATCH for fixes, MINOR for new features, and MAJOR for breaking changes such as a migration that can't be rolled back.
 
 ## Backups
 ```bash

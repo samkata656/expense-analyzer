@@ -55,7 +55,7 @@ Demo employees (seed data): `Иван Петров / EMP-001`, `Мария Ге�
 | n8n policy rules | `node --test tests/policy.test.mjs` (repo root) | 30 boundary cases through the real *Expense Policy* workflow |
 | E2E | `npm run e2e` | Playwright on desktop and Pixel 7: identity, submission, history, errors, CFO chat |
 
-GitHub Actions runs all of them on every PR, plus Docker builds. A merge to `main` publishes `ghcr.io/samkata656/expense-analyzer-{web,db,n8n}`. Codex reviews PRs using the guidelines in [AGENTS.md](AGENTS.md).
+GitHub Actions runs all of them on every PR, plus Docker builds. A merge to `main` publishes `ghcr.io/samkata656/expense-analyzer-{web,db,n8n}:latest`, and a GitHub Release `vX.Y.Z` publishes `:X.Y.Z`, which is what production pins (`IMAGE_TAG`). See [DEPLOY.md → Updating](docs/DEPLOY.md#updating-releases). Codex reviews PRs using the guidelines in [AGENTS.md](AGENTS.md).
 
 ## Security audit
 

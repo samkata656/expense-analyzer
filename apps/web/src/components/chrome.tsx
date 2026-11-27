@@ -42,7 +42,9 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-c800">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5 flex flex-wrap items-center justify-between gap-3 text-xs text-c300">
-        <span className="font-mono uppercase tracking-wider">Proof of concept · EAIA</span>
+        <span className="font-mono uppercase tracking-wider">
+          Proof of concept · EAIA · <span className="normal-case">{process.env.NEXT_PUBLIC_APP_VERSION ?? "dev"}</span>
+        </span>
         <a href="https://samkobuilds.com" className="flex items-center gap-2 hover:text-paper transition-colors">
           <Monogram size={20} />
           built by samkoBuilds
