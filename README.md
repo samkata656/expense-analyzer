@@ -37,10 +37,11 @@ Any other currency, an unreadable receipt or a suspicious comment sends the expe
 Requirements: Docker, Node 26.
 
 ```bash
-cp .env.example .env            # dev defaults work as-is
-docker compose -f docker-compose.dev.yml up -d --build   # Postgres :55432, n8n :5678
+docker compose -f docker-compose.dev.yml up -d --build   # Postgres :55432, n8n :5678 (built-in dev defaults)
 cd apps/web && cp .env.example .env.local && npm ci && npm run dev   # http://localhost:3000
 ```
+
+`apps/web/.env.example` matches the dev compose defaults. The root `.env.example` is the **production** variable list for Portainer, so don't use it locally.
 
 Open n8n at http://localhost:5678, create the owner account and paste your OpenAI key into the **OpenAI** credential. The workflows and other credentials are imported automatically.
 
