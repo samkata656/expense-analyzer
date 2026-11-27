@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+.env
+.env.*
+!.env.example
+apps/web/uploads/
+test-results/
+playwright-report/
+blob-report/
+coverage/
+*.log
+.DS_Store
+next-env.d.ts

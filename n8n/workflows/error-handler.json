@@ -1,0 +1,63 @@
+{
+  "id": "expErrors0000001",
+  "name": "Error Handler (log to error_logs)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "3c1b9fef-ead0-42d3-a2fa-bd78503372ac",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO error_logs (source, node, error_code, message, execution_id, payload)\nVALUES ($1, $2, 'WORKFLOW_ERROR', $3, $4, $5::jsonb)\nRETURNING id;",
+        "options": {
+          "queryReplacement": "={{ [ $json.workflow?.name ?? 'unknown', $json.execution?.lastNodeExecuted ?? $json.trigger?.error?.node?.name ?? '', String($json.execution?.error?.message ?? $json.trigger?.error?.message ?? 'unknown error').slice(0, 2000), String($json.execution?.id ?? ''), JSON.stringify({ workflowId: $json.workflow?.id ?? null, mode: $json.execution?.mode ?? null, url: $json.execution?.url ?? null, stack: String($json.execution?.error?.stack ?? '').slice(0, 4000) }) ] }}"
+        }
+      },
+      "id": "427249b1-bd34-493c-af07-aa23e424ec59",
+      "name": "Log to error_logs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        240,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "pgAppRw000000001",
+          "name": "Expenses DB (app_rw)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Log to error_logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

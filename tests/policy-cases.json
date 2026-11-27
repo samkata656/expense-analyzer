@@ -1,0 +1,362 @@
+[
+  {
+    "id": "c1",
+    "category": "food",
+    "amount": 50,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P1"
+    }
+  },
+  {
+    "id": "c2",
+    "category": "food",
+    "amount": 50.01,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P1"
+    }
+  },
+  {
+    "id": "c3",
+    "category": "food",
+    "amount": 12.4,
+    "currency": "BGN",
+    "has_alcohol": true,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P1"
+    }
+  },
+  {
+    "id": "c4",
+    "category": "food",
+    "amount": 25.56,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P1"
+    }
+  },
+  {
+    "id": "c5",
+    "category": "food",
+    "amount": 25.57,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P1"
+    }
+  },
+  {
+    "id": "c6",
+    "category": "food",
+    "amount": 120,
+    "currency": "BGN",
+    "has_alcohol": true,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P1"
+    }
+  },
+  {
+    "id": "c7",
+    "category": "business_meal",
+    "amount": 400,
+    "currency": "BGN",
+    "has_alcohol": true,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P2"
+    }
+  },
+  {
+    "id": "c8",
+    "category": "business_meal",
+    "amount": 400.01,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P2"
+    }
+  },
+  {
+    "id": "c9",
+    "category": "business_meal",
+    "amount": 250,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P2"
+    }
+  },
+  {
+    "id": "c10",
+    "category": "cigarettes",
+    "amount": 7.5,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P3"
+    }
+  },
+  {
+    "id": "c11",
+    "category": "cigarettes",
+    "amount": 0.5,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P3"
+    }
+  },
+  {
+    "id": "c12",
+    "category": "city_transport",
+    "amount": 30,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P4"
+    }
+  },
+  {
+    "id": "c13",
+    "category": "city_transport",
+    "amount": 30.01,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P4"
+    }
+  },
+  {
+    "id": "c14",
+    "category": "city_transport",
+    "amount": 15.34,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P4"
+    }
+  },
+  {
+    "id": "c15",
+    "category": "city_transport",
+    "amount": 15.4,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P4"
+    }
+  },
+  {
+    "id": "c16",
+    "category": "travel",
+    "amount": 10,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P5"
+    }
+  },
+  {
+    "id": "c17",
+    "category": "travel",
+    "amount": 2000,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P5"
+    }
+  },
+  {
+    "id": "c18",
+    "category": "it_equipment",
+    "amount": 600,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P6"
+    }
+  },
+  {
+    "id": "c19",
+    "category": "it_equipment",
+    "amount": 600.01,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P6"
+    }
+  },
+  {
+    "id": "c20",
+    "category": "it_equipment",
+    "amount": 306.77,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P6"
+    }
+  },
+  {
+    "id": "c21",
+    "category": "it_equipment",
+    "amount": 550,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "rejected",
+      "policy": "P6"
+    }
+  },
+  {
+    "id": "c22",
+    "category": "training",
+    "amount": 5000,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P7"
+    }
+  },
+  {
+    "id": "c23",
+    "category": "training",
+    "amount": 3000,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P7"
+    }
+  },
+  {
+    "id": "c24",
+    "category": "other",
+    "amount": 1,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P8"
+    }
+  },
+  {
+    "id": "c25",
+    "category": "other",
+    "amount": 999,
+    "currency": "EUR",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P8"
+    }
+  },
+  {
+    "id": "c26",
+    "category": "food",
+    "amount": 5,
+    "currency": "USD",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P8"
+    }
+  },
+  {
+    "id": "c27",
+    "category": "training",
+    "amount": 100,
+    "currency": "GBP",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "manual_review",
+      "policy": "P8"
+    }
+  },
+  {
+    "id": "c28",
+    "category": "food",
+    "amount": 10,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": true,
+    "expected": {
+      "status": "manual_review",
+      "policy": "SECURITY"
+    }
+  },
+  {
+    "id": "c29",
+    "category": "it_equipment",
+    "amount": 100,
+    "currency": "BGN",
+    "has_alcohol": false,
+    "force_manual_review": true,
+    "expected": {
+      "status": "manual_review",
+      "policy": "SECURITY"
+    }
+  },
+  {
+    "id": "c30",
+    "category": "food",
+    "amount": 10,
+    "currency": "bgn",
+    "has_alcohol": false,
+    "force_manual_review": false,
+    "expected": {
+      "status": "approved",
+      "policy": "P1"
+    }
+  }
+]

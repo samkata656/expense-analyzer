@@ -1,0 +1,103 @@
+{
+  "id": "expPolicyTest001",
+  "name": "TEST ONLY: Policy harness",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "policy-test",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "70a5da1e-93f6-408c-acdc-09248f44df16",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "2264f4a6-9cbd-42dd-a67c-5c687c77fe6d"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.cases",
+        "options": {}
+      },
+      "id": "b8fc7c02-141f-46ff-a2c9-1e8b082d2302",
+      "name": "Split cases",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "expPolicy0000001",
+          "cachedResultName": "Expense Policy (rules)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "f69ad133-7b70-43ad-ab5e-079acace9d35",
+      "name": "Apply expense policy",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Split cases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split cases": {
+      "main": [
+        [
+          {
+            "node": "Apply expense policy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

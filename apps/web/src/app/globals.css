@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* samkoBuilds brand tokens */
+@theme {
+  --color-core: #0d0d0f;
+  --color-c900: #17171b;
+  --color-c800: #232328;
+  --color-c700: #2e2e35;
+  --color-c500: #55555f;
+  --color-c300: #8c8c96;
+  --color-paper: #f2efe9;
+  --color-signal: #ff6b35;
+  --color-signal-hover: #ff7f50;
+  --color-info: #4da6ff;
+  --color-success: #3fb878;
+  --color-warning: #f2b705;
+  --color-danger: #e5484d;
+
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-core);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
