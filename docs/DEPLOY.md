@@ -154,7 +154,7 @@ Open `http://DROPLET_IP:81`. You can reach it because the firewall allows only y
 1. Open `https://n8n.samkobuilds.com`. Pass the basic-auth prompt, then create the **owner account**.
 2. Open **Credentials → OpenAI**, paste your API key and **Save**. Skip this if you set `OPENAI_API_KEY` in step 6. The Postgres and webhook credentials are already filled in from the environment.
 3. Open **Workflows**. *Expense Intake*, *Expense Policy (rules)*, *Error Handler* and *CFO Assistant* should all be **published** (active). The test harness is **not** there in production, and that is expected.
-4. In OpenAI → **Settings → Limits**, set a **monthly budget** on the project the key belongs to. This caps how much anyone could abuse the AI.
+4. In OpenAI → project **Settings → Limits**, set a **monthly budget** and turn on **Enforce a hard limit**. A budget alone only sends alerts, while the hard limit actually stops requests. Use a project-scoped key, so this cap covers everything n8n can spend. This caps how much anyone could abuse the AI.
 
 ## 9. Smoke test
 On your phone, at `https://expenses.samkobuilds.com`:
