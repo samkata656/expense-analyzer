@@ -452,11 +452,10 @@ RETURNING id, merchant, to_char(receipt_date, 'YYYY-MM-DD') AS receipt_date, amo
       ["expense_id", "={{ $json.id }}", "string"],
       [
         "embedding_text",
-        "={{ 'Разход от ' + $('Policy input').first().json.employee_name + ' (служебен номер ' + $('Policy input').first().json.employee_code + '). Търговец: ' + ($json.merchant ?? 'неизвестен') + '. Дата: ' + ($json.receipt_date ?? 'няма') + '. Сума: ' + $json.amount + ' ' + $json.currency + ($json.amount_eur != null ? ' (' + $json.amount_eur + ' EUR)' : '') + '. Категория: ' + $json.category + '. Статус: ' + $json.status + '. Причина: ' + $json.status_reason + '. Описание: ' + ($('Policy input').first().json.description ?? '') }}",
+        "={{ 'Разход от ' + $('Policy input').first().json.employee_name + '. Търговец: ' + ($json.merchant ?? 'неизвестен') + '. Дата: ' + ($json.receipt_date ?? 'няма') + '. Сума: ' + $json.amount + ' ' + $json.currency + ($json.amount_eur != null ? ' (' + $json.amount_eur + ' EUR)' : '') + '. Категория: ' + $json.category + '. Статус: ' + $json.status + '. Причина: ' + $json.status_reason + '. Описание: ' + ($('Policy input').first().json.description ?? '') }}",
         "string",
       ],
       ["user_id", "={{ $('Policy input').first().json.user_id }}", "string"],
-      ["employee_code", "={{ $('Policy input').first().json.employee_code }}", "string"],
       ["status", "={{ $json.status }}", "string"],
       ["category", "={{ $json.category }}", "string"],
     ], false),
@@ -483,7 +482,6 @@ RETURNING id, merchant, to_char(receipt_date, 'YYYY-MM-DD') AS receipt_date, amo
           metadataValues: [
             { name: "expense_id", value: "={{ $json.expense_id }}" },
             { name: "user_id", value: "={{ $json.user_id }}" },
-            { name: "employee_code", value: "={{ $json.employee_code }}" },
             { name: "status", value: "={{ $json.status }}" },
             { name: "category", value: "={{ $json.category }}" },
           ],

@@ -72,12 +72,13 @@ services:
       N8N_CFO_WEBHOOK_URL: http://n8n:5678/webhook/cfo-chat
       N8N_WEBHOOK_SECRET: ${N8N_WEBHOOK_SECRET}
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?set PUBLIC_BASE_URL}
+      CFO_EMPLOYEE_CODE: ${CFO_EMPLOYEE_CODE:?set CFO_EMPLOYEE_CODE (secret, replaces the demo CFO code)}
     volumes:
       - uploads:/data/uploads
     networks: [backend]
 
   proxy:
-    image: jc21/nginx-proxy-manager:latest
+    image: jc21/nginx-proxy-manager:2.17.1
     restart: unless-stopped
     ports:
       - "80:80"

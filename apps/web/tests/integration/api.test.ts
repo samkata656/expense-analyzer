@@ -216,6 +216,17 @@ describe("GET /uploads/[file]", () => {
   });
 });
 
+describe("CFO code from env", () => {
+  it("replaces the public demo code so the seeded one stops working", async () => {
+    const { applyCfoCode } = await import("@/lib/cfo-identity");
+    expect(await applyCfoCode(sql, "  ", () => {})).toBe(false);
+    await applyCfoCode(sql, "SECRET-CFO-42", () => {});
+    expect((await r.identity.POST(json(cfo))).status).toBe(404);
+    expect((await r.identity.POST(json({ ...cfo, employeeId: "SECRET-CFO-42" }))).status).toBe(200);
+    await applyCfoCode(sql, cfo.employeeId, () => {});
+  });
+});
+
 describe("database roles", () => {
   it("cfo_readonly can read but never write", async () => {
     const u = new URL(inject("databaseUrl"));
@@ -226,6 +237,9 @@ describe("database roles", () => {
       expect((await ro`SELECT count(*)::int AS n FROM expenses`)[0].n).toBeGreaterThan(0);
       await expect(ro`DELETE FROM expenses`).rejects.toThrow();
       await expect(ro`SELECT * FROM jailbreak_attempts`).rejects.toThrow(/permission denied/);
+      // employee codes are the login secret: hidden from the CFO agent
+      expect((await ro`SELECT first_name, role FROM users WHERE role = 'cfo'`)[0].role).toBe("cfo");
+      await expect(ro`SELECT employee_code FROM users`).rejects.toThrow(/permission denied/);
     } finally {
       await ro.end();
     }

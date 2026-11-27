@@ -10,4 +10,6 @@ export async function register() {
   const { migrate } = await import("./lib/migrate");
   const { env } = await import("./lib/env");
   await migrate(db(), env.migrationsDir);
+  const { applyCfoCode } = await import("./lib/cfo-identity");
+  await applyCfoCode(db(), process.env.CFO_EMPLOYEE_CODE);
 }

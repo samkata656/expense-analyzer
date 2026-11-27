@@ -14,6 +14,12 @@ Format: `## [workflow version] - date`, then one line per workflow touched, with
 
 ---
 
+## [1.4.0] - 2026-11-27
+Security audit (/cso) follow-up. Employee codes work as the login secret, so the CFO agent must never see them.
+- **Expense Intake**: *Embedding text* and the vector metadata no longer contain `employee_code` (only name and `user_id`).
+- **CFO Assistant**: prompt `cfo-v1.1`. The schema hides `employee_code`, `SELECT *` on users is forbidden, and the agent refuses to reveal employee codes.
+- **DB** (migration `003_harden_cfo_access.sql`): `cfo_readonly` gets a column-level grant on `users` without `employee_code`, and existing embeddings are scrubbed.
+
 ## [1.3.0] - 2026-11-27
 - **CFO Assistant**: AI Agent node upgraded 2.2 → 3.1. v2.2 rejects models that run on the Responses API ("This model is not supported in 2.2 version").
 - **CFO Assistant**: new *Has reply?* If node. An empty agent answer is logged to `error_logs` and returned as `AI_ERROR` instead of an empty 200.
