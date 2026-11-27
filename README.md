@@ -57,9 +57,37 @@ Demo employees (seed data): `Иван Петров / EMP-001`, `Мария Ге�
 
 GitHub Actions runs all of them on every PR, plus Docker builds. A merge to `main` publishes `ghcr.io/samkata656/expense-analyzer-{web,db,n8n}`. Codex reviews PRs using the guidelines in [AGENTS.md](AGENTS.md).
 
+## Security audit
+
+Two audits were run before going live, using the `code-review` and `cso` skills: one on the repository before it was published, and one on the running droplet after deployment.
+
+### 1. Repository (`/code-review` + `/cso --comprehensive`, before publishing)
+| Finding | Severity | Outcome |
+|---|---|---|
+| The public seed contains the CFO's name and code, so anyone could open `/cfo` | High | **Fixed.** `CFO_EMPLOYEE_CODE` (required in production) replaces the demo code at startup. |
+| The CFO agent could read employee codes (the login secret) through SQL or embeddings | Medium | **Fixed.** `cfo_readonly` has a column-level grant without `employee_code`, codes were removed from the embeddings, and prompt `cfo-v1.1` refuses to reveal them (migration `003`). |
+| Unpinned `nginx-proxy-manager:latest` | Medium | **Fixed.** Pinned to `2.17.1`. |
+| First-visit takeover of the n8n/NPM admin accounts during deploy | Medium | **Mitigated.** The firewall comes first in the deploy guide, and the owners are created before the hosts go public. |
+| OpenAI spend abuse through IP rotation | Medium | **Mitigated.** Per-IP rate limit plus a hard monthly limit on the OpenAI project. |
+| n8n webhooks reachable on the public n8n host | Low | **Fixed.** The n8n host is IP-allow-listed in NPM, and the web app calls n8n over the internal network only. |
+| Code review: oversized uploads buffered, image deleted on an n8n timeout, `PUBLIC` could connect to the n8n/postgres DBs | Medium | **Fixed** (body-size guard, image kept on timeout, `REVOKE CONNECT`), with regression tests. |
+| Codex PR review: wrong `sha-` tag in publish, mismatched local `.env` docs, budget without a hard limit | Medium | **Fixed** (#5). |
+
+Clean: no secrets in git history, `npm audit` reports 0 vulnerabilities, all SQL is parameterised, no raw HTML from AI output, containers run without root, and the actions are SHA-pinned with minimal permissions.
+
+### 2. Droplet (`/cso --infra --comprehensive`, run by Claude Code over SSH on the server)
+| Finding | Severity | Outcome |
+|---|---|---|
+| The 6 demo employee codes are public (seed file) | High | **Accepted for the exam demo.** They exist so examiners can log in. The DB holds no real data, and spend is capped by the OpenAI hard limit. Before real use, replace them with real employees and private codes. |
+| NPM admin (:81) and Portainer (:9443) bound to `0.0.0.0`, and Docker bypasses ufw | High | **Fixed.** The DigitalOcean Cloud Firewall has no rule for 81 (verified to time out from outside), and 9443 is open to the owner's IP only. Port 81 is now also bound to `127.0.0.1` and reached through an SSH tunnel. |
+| The `app_rw` password is visible in the container env and was printed in the audit transcript | Medium | **Accepted.** Postgres isn't published, and the transcript is local to the server. The safe rotation procedure is in [DEPLOY.md](docs/DEPLOY.md#troubleshooting). |
+| Kernel updates installed, reboot pending | Medium | **Resolved by** a reboot ([DEPLOY.md](docs/DEPLOY.md) step 10). The containers restart by themselves. |
+| Production pulled `:latest` | Low | **Resolved by** pinning `IMAGE_TAG=sha-…` in the stack ([DEPLOY.md](docs/DEPLOY.md) step 6), so you can roll back by tag. |
+| `deploy` has NOPASSWD sudo and docker access, and X11 forwarding is on | Low | **Accepted.** This is the standard course cloud-init. Key-only SSH, root login disabled, fail2ban and unattended-upgrades are active. |
+
 ## Security notes and known limits
 - As the spec requires, identity is **name + employee ID** with no password, so anyone who knows an employee's ID can act as that employee. The CFO's code is a production secret, and the CFO assistant can't read employee codes.
-- n8n webhooks need the `X-Webhook-Secret` header, and the web app reaches n8n over the internal Docker network only.
+- n8n webhooks need the `X-Webhook-Secret` header, and the web app reaches n8n over the internal Docker network only. The n8n editor is reachable only from the owner's IP (NPM access list).
 - User comments are treated as data: they're wrapped in markers, a guard model checks them, injected instructions are stripped and logged to `jailbreak_attempts`, and the expense goes to manual review. Text hidden inside an image can still influence extraction, but the decision itself is never made by the model.
 - Receipt images are served at unguessable UUID URLs without authentication.
 - The rate limiting is in memory and per IP. Set a monthly budget on the OpenAI project.
