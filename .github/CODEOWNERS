@@ -1,0 +1,5 @@
+# Workflow, Docker and DB changes need the owner's review.
+/.github/ @samkata656
+/db/ @samkata656
+**/Dockerfile @samkata656
+docker-compose*.yml @samkata656
