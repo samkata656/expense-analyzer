@@ -1,6 +1,7 @@
 # Local development: Postgres + n8n in Docker, Next.js via `npm run dev` on the host
 # (or add `--profile web` to also run the production web image locally).
-#   docker compose -f docker-compose.dev.yml --env-file .env up -d --build
+#   docker compose -f docker-compose.dev.yml up -d --build
+# Defaults match apps/web/.env.example. The root .env.example is for production only.
 name: expense-analyzer-dev
 
 services:

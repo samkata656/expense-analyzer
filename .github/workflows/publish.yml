@@ -40,13 +40,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # For workflow_run, GITHUB_SHA is the tip of main, not the tested commit: tag from the checked-out SHA.
+      - id: sha
+        run: echo "full=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT" && echo "short=$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
       - id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ghcr.io/${{ github.repository_owner }}/expense-analyzer-${{ matrix.name }}
           tags: |
             type=raw,value=latest
-            type=sha,prefix=sha-,format=short
+            type=raw,value=sha-${{ steps.sha.outputs.short }}
+          labels: |
+            org.opencontainers.image.revision=${{ steps.sha.outputs.full }}
       - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: ${{ matrix.context }}
